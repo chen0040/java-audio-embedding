@@ -54,7 +54,7 @@ public class MelSpectrogram  implements PitchDetectionHandler {
 
     }
 
-    public void loadAudio(String fileName, String name) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
+    public void loadAudio(File audioFile, String name) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
 
         if(dispatcher!= null){
             dispatcher.stop();
@@ -63,7 +63,7 @@ public class MelSpectrogram  implements PitchDetectionHandler {
         PitchProcessor.PitchEstimationAlgorithm newAlgo = PitchProcessor.PitchEstimationAlgorithm.valueOf(name);
         algo = newAlgo;
 
-        File audioFile = new File(fileName);
+
         dispatcher = AudioDispatcherFactory.fromFile(audioFile, bufferSize, overlap);
         AudioFormat format = AudioSystem.getAudioFileFormat(audioFile).getFormat();
         dispatcher.addAudioProcessor(new AudioPlayer(format));
