@@ -13,6 +13,7 @@ import be.tarsos.dsp.util.fft.FFT;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.LineUnavailableException;
@@ -186,5 +187,22 @@ public class MelSpectrogram  implements PitchDetectionHandler {
             pitch = -1;
         }
 
+    }
+
+    public static void main(String[] args) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+        File file = new File("gtzan/genres");
+        for(File class_folder : file.listFiles()) {
+            for(File f : class_folder.listFiles()){
+                String file_path = f.getAbsolutePath();
+                if(file_path.endsWith("au")){
+                    System.out.println("Converting " + file_path + " ...");
+                    String output_image_path = file_path + ".png";
+                    MelSpectrogram melGram = new MelSpectrogram();
+                    BufferedImage image = melGram.convertAudio(f);
+                    File outputFile = new File(output_image_path);
+                    ImageIO.write(image, "png", outputFile);
+                }
+            }
+        }
     }
 }
