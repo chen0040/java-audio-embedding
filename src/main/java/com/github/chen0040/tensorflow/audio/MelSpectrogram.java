@@ -27,6 +27,7 @@ import java.io.IOException;
 public class MelSpectrogram  implements PitchDetectionHandler {
 
 
+    private boolean log2Console = false;
 
     private float sampleRate = 44100;
     private int bufferSize = 1024 * 4;
@@ -34,12 +35,15 @@ public class MelSpectrogram  implements PitchDetectionHandler {
 
     private double pitch;
 
-    private int outputFrameWidth = 224;
-    private int outputFrameHeight = 224;
+    private int outputFrameWidth = 640*4;
+    private int outputFrameHeight = 480*4;
 
-    BufferedImage bufferedImage = new BufferedImage(640*4,480*4, BufferedImage.TYPE_INT_RGB);
+    String currentPitch = "";
+    int position = 0;
 
-    private PitchProcessor.PitchEstimationAlgorithm algorithm = PitchProcessor.PitchEstimationAlgorithm.FFT_YIN;
+    BufferedImage bufferedImage = new BufferedImage(outputFrameWidth,outputFrameHeight, BufferedImage.TYPE_INT_RGB);
+
+    private PitchProcessor.PitchEstimationAlgorithm algorithm = PitchProcessor.PitchEstimationAlgorithm.YIN;
 
     AudioProcessor fftProcessor = new AudioProcessor(){
 
@@ -54,7 +58,7 @@ public class MelSpectrogram  implements PitchDetectionHandler {
 
         public boolean process(AudioEvent audioEvent) {
             float[] audioFloatBuffer = audioEvent.getFloatBuffer();
-            float[] transformBuffer = new float[bufferSize*2];
+            float[] transformBuffer = new float[bufferSize * 2];
             System.arraycopy(audioFloatBuffer, 0, transformBuffer, 0, audioFloatBuffer.length);
             fft.forwardTransform(transformBuffer);
             fft.modulus(transformBuffer, amplitudes);
@@ -79,7 +83,7 @@ public class MelSpectrogram  implements PitchDetectionHandler {
             } else {
                 binEstimate = (frequency - minFrequency) / maxFrequency * outputFrameHeight;
             }
-            if (binEstimate > 700) {
+            if (binEstimate > 700 && log2Console) {
                 System.out.println(binEstimate + "");
             }
             bin = outputFrameHeight - 1 - (int) binEstimate;
@@ -89,8 +93,7 @@ public class MelSpectrogram  implements PitchDetectionHandler {
 
     private void drawFFT(double pitch, float[] amplitudes, FFT fft, BufferedImage bufferedImage) {
 
-        String currentPitch = "";
-        int position = 0;
+
 
 
         Graphics2D bufferedGraphics = bufferedImage.createGraphics();
@@ -161,6 +164,9 @@ public class MelSpectrogram  implements PitchDetectionHandler {
         // add a processor, handle pitch event.
         dispatcher.addAudioProcessor(new PitchProcessor(algorithm, sampleRate, bufferSize, this));
         dispatcher.addAudioProcessor(fftProcessor);
+
+        position = 0;
+        currentPitch = "";
 
         // run the dispatcher (on a new thread).
         dispatcher.run();

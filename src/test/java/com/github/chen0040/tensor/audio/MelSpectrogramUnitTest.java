@@ -16,7 +16,7 @@ public class MelSpectrogramUnitTest {
     public void generateMelSpetrogram() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
         MelSpectrogram melGram = new MelSpectrogram();
         BufferedImage image = melGram.convertAudio(FileUtils.getAudioFile());
-        File outputFile = new File("saved.png");
+        File outputFile = new File("outputs/saved.png");
         ImageIO.write(image, "png", outputFile);
     }
 }
