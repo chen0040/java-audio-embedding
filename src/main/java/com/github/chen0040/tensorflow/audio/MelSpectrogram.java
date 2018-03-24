@@ -28,6 +28,8 @@ public class MelSpectrogram  implements PitchDetectionHandler {
 
 
     private boolean log2Console = false;
+    private boolean showMarkers = false;
+    private boolean showPitch = false;
 
     private float sampleRate = 44100;
     private int bufferSize = 1024 * 4;
@@ -121,32 +123,35 @@ public class MelSpectrogram  implements PitchDetectionHandler {
         }
 
 
-        if (pitch != -1) {
+        if (showPitch && pitch != -1) {
             int pitchIndex = frequencyToBin(pitch);
             bufferedGraphics.setColor(Color.RED);
             bufferedGraphics.fillRect(position, pitchIndex, 1, 1);
             currentPitch = "Current frequency: " + (int) pitch + "Hz";
         }
 
+        if(showMarkers) {
+            bufferedGraphics.clearRect(0,0, 190,30);
+            bufferedGraphics.setColor(Color.WHITE);
 
 
-        bufferedGraphics.clearRect(0,0, 190,30);
-        bufferedGraphics.setColor(Color.WHITE);
-        bufferedGraphics.drawString(currentPitch, 20, 20);
+            bufferedGraphics.drawString(currentPitch, 20, 20);
 
-        for(int i = 100 ; i < 500; i += 100){
-            int bin = frequencyToBin(i);
-            bufferedGraphics.drawLine(0, bin, 5, bin);
-        }
 
-        for(int i = 500 ; i <= 20000; i += 500){
-            int bin = frequencyToBin(i);
-            bufferedGraphics.drawLine(0, bin, 5, bin);
-        }
+            for(int i = 100 ; i < 500; i += 100){
+                int bin = frequencyToBin(i);
+                bufferedGraphics.drawLine(0, bin, 5, bin);
+            }
 
-        for(int i = 100 ; i <= 20000; i*=10){
-            int bin = frequencyToBin(i);
-            bufferedGraphics.drawString(String.valueOf(i), 10, bin);
+            for(int i = 500 ; i <= 20000; i += 500){
+                int bin = frequencyToBin(i);
+                bufferedGraphics.drawLine(0, bin, 5, bin);
+            }
+
+            for (int i = 100; i <= 20000; i *= 10) {
+                int bin = frequencyToBin(i);
+                bufferedGraphics.drawString(String.valueOf(i), 10, bin);
+            }
         }
 
         position+=3;
