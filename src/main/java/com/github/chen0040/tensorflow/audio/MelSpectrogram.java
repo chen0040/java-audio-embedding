@@ -8,18 +8,25 @@ import be.tarsos.dsp.io.jvm.AudioPlayer;
 import be.tarsos.dsp.pitch.PitchDetectionHandler;
 import be.tarsos.dsp.pitch.PitchDetectionResult;
 import be.tarsos.dsp.pitch.PitchProcessor;
+import be.tarsos.dsp.util.PitchConverter;
 import be.tarsos.dsp.util.fft.FFT;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+@Getter
+@Setter
 public class MelSpectrogram  implements PitchDetectionHandler {
 
-    private AudioDispatcher dispatcher;
+
 
     private float sampleRate = 44100;
     private int bufferSize = 1024 * 4;
@@ -27,53 +34,138 @@ public class MelSpectrogram  implements PitchDetectionHandler {
 
     private double pitch;
 
-    private PitchProcessor.PitchEstimationAlgorithm algo;
+    private int outputFrameWidth = 224;
+    private int outputFrameHeight = 224;
+
+    BufferedImage bufferedImage = new BufferedImage(640*4,480*4, BufferedImage.TYPE_INT_RGB);
+
+    private PitchProcessor.PitchEstimationAlgorithm algorithm = PitchProcessor.PitchEstimationAlgorithm.FFT_YIN;
 
     AudioProcessor fftProcessor = new AudioProcessor(){
 
         FFT fft = new FFT(bufferSize);
         float[] amplitudes = new float[bufferSize/2];
 
+
         public void processingFinished() {
             // TODO Auto-generated method stub
         }
 
+
         public boolean process(AudioEvent audioEvent) {
             float[] audioFloatBuffer = audioEvent.getFloatBuffer();
-            float[] transformbuffer = new float[bufferSize*2];
-            System.arraycopy(audioFloatBuffer, 0, transformbuffer, 0, audioFloatBuffer.length);
-            fft.forwardTransform(transformbuffer);
-            fft.modulus(transformbuffer, amplitudes);
-            drawFFT(pitch, amplitudes,fft);
+            float[] transformBuffer = new float[bufferSize*2];
+            System.arraycopy(audioFloatBuffer, 0, transformBuffer, 0, audioFloatBuffer.length);
+            fft.forwardTransform(transformBuffer);
+            fft.modulus(transformBuffer, amplitudes);
+            drawFFT(pitch, amplitudes,fft, bufferedImage);
             return true;
         }
 
     };
 
-    private void drawFFT(double pitch, float[] amplitudes, FFT fft) {
-
+    private int frequencyToBin(final double frequency) {
+        final double minFrequency = 50; // Hz
+        final double maxFrequency = 11000; // Hz
+        int bin = 0;
+        final boolean logaritmic = true;
+        if (frequency != 0 && frequency > minFrequency && frequency < maxFrequency) {
+            double binEstimate = 0;
+            if (logaritmic) {
+                final double minCent = PitchConverter.hertzToAbsoluteCent(minFrequency);
+                final double maxCent = PitchConverter.hertzToAbsoluteCent(maxFrequency);
+                final double absCent = PitchConverter.hertzToAbsoluteCent(frequency * 2);
+                binEstimate = (absCent - minCent) / maxCent * outputFrameHeight;
+            } else {
+                binEstimate = (frequency - minFrequency) / maxFrequency * outputFrameHeight;
+            }
+            if (binEstimate > 700) {
+                System.out.println(binEstimate + "");
+            }
+            bin = outputFrameHeight - 1 - (int) binEstimate;
+        }
+        return bin;
     }
 
-    public void loadAudio(File audioFile, String name) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
+    private void drawFFT(double pitch, float[] amplitudes, FFT fft, BufferedImage bufferedImage) {
 
-        if(dispatcher!= null){
-            dispatcher.stop();
+        String currentPitch = "";
+        int position = 0;
+
+
+        Graphics2D bufferedGraphics = bufferedImage.createGraphics();
+
+        double maxAmplitude=0;
+        //for every pixel calculate an amplitude
+        float[] pixelAmplitudes = new float[outputFrameHeight];
+        //iterate the large array and map to pixels
+        for (int i = amplitudes.length/800; i < amplitudes.length; i++) {
+            int pixelY = frequencyToBin(i * 44100 / (amplitudes.length * 8));
+            pixelAmplitudes[pixelY] += amplitudes[i];
+            maxAmplitude = Math.max(pixelAmplitudes[pixelY], maxAmplitude);
         }
 
-        PitchProcessor.PitchEstimationAlgorithm newAlgo = PitchProcessor.PitchEstimationAlgorithm.valueOf(name);
-        algo = newAlgo;
+        //draw the pixels
+        for (int i = 0; i < pixelAmplitudes.length; i++) {
+            Color color = Color.black;
+            if (maxAmplitude != 0) {
+
+                final int greyValue = (int) (Math.log1p(pixelAmplitudes[i] / maxAmplitude) / Math.log1p(1.0000001) * 255);
+                color = new Color(greyValue, greyValue, greyValue);
+            }
+            bufferedGraphics.setColor(color);
+            bufferedGraphics.fillRect(position, i, 3, 1);
+        }
 
 
-        dispatcher = AudioDispatcherFactory.fromFile(audioFile, bufferSize, overlap);
+        if (pitch != -1) {
+            int pitchIndex = frequencyToBin(pitch);
+            bufferedGraphics.setColor(Color.RED);
+            bufferedGraphics.fillRect(position, pitchIndex, 1, 1);
+            currentPitch = "Current frequency: " + (int) pitch + "Hz";
+        }
+
+
+
+        bufferedGraphics.clearRect(0,0, 190,30);
+        bufferedGraphics.setColor(Color.WHITE);
+        bufferedGraphics.drawString(currentPitch, 20, 20);
+
+        for(int i = 100 ; i < 500; i += 100){
+            int bin = frequencyToBin(i);
+            bufferedGraphics.drawLine(0, bin, 5, bin);
+        }
+
+        for(int i = 500 ; i <= 20000; i += 500){
+            int bin = frequencyToBin(i);
+            bufferedGraphics.drawLine(0, bin, 5, bin);
+        }
+
+        for(int i = 100 ; i <= 20000; i*=10){
+            int bin = frequencyToBin(i);
+            bufferedGraphics.drawString(String.valueOf(i), 10, bin);
+        }
+
+        position+=3;
+        position = position % outputFrameWidth;
+    }
+
+    public BufferedImage convertAudio(File audioFile) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
+
+        AudioDispatcher dispatcher = AudioDispatcherFactory.fromFile(audioFile, bufferSize, overlap);
         AudioFormat format = AudioSystem.getAudioFileFormat(audioFile).getFormat();
         dispatcher.addAudioProcessor(new AudioPlayer(format));
 
+        bufferedImage = new BufferedImage(640*4,480*4, BufferedImage.TYPE_INT_RGB);
+
         // add a processor, handle pitch event.
-        dispatcher.addAudioProcessor(new PitchProcessor(algo, sampleRate, bufferSize, this));
+        dispatcher.addAudioProcessor(new PitchProcessor(algorithm, sampleRate, bufferSize, this));
         dispatcher.addAudioProcessor(fftProcessor);
 
         // run the dispatcher (on a new thread).
-        new Thread(dispatcher,"Audio dispatching").start();
+        dispatcher.run();
+
+        return bufferedImage;
     }
 
     public void handlePitch(PitchDetectionResult pitchDetectionResult,AudioEvent audioEvent) {
