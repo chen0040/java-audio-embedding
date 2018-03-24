@@ -44,7 +44,7 @@ public class MelSpectrogram  implements PitchDetectionHandler {
     AudioProcessor fftProcessor = new AudioProcessor(){
 
         FFT fft = new FFT(bufferSize);
-        float[] amplitudes = new float[bufferSize/2];
+        float[] amplitudes = new float[bufferSize];
 
 
         public void processingFinished() {
