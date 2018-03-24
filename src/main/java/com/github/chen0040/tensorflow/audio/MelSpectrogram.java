@@ -165,7 +165,7 @@ public class MelSpectrogram  implements PitchDetectionHandler {
         AudioFormat format = AudioSystem.getAudioFileFormat(audioFile).getFormat();
         dispatcher.addAudioProcessor(new AudioPlayer(format));
 
-        bufferedImage = new BufferedImage(640*4,480*4, BufferedImage.TYPE_INT_RGB);
+        bufferedImage = new BufferedImage(outputFrameWidth,outputFrameHeight, BufferedImage.TYPE_INT_RGB);
 
         // add a processor, handle pitch event.
         dispatcher.addAudioProcessor(new PitchProcessor(algorithm, sampleRate, bufferSize, this));
@@ -191,16 +191,22 @@ public class MelSpectrogram  implements PitchDetectionHandler {
 
     public static void main(String[] args) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
         File file = new File("gtzan/genres");
-        for(File class_folder : file.listFiles()) {
-            for(File f : class_folder.listFiles()){
-                String file_path = f.getAbsolutePath();
-                if(file_path.endsWith("au")){
-                    System.out.println("Converting " + file_path + " ...");
-                    String output_image_path = file_path + ".png";
-                    MelSpectrogram melGram = new MelSpectrogram();
-                    BufferedImage image = melGram.convertAudio(f);
-                    File outputFile = new File(output_image_path);
-                    ImageIO.write(image, "png", outputFile);
+        if(file.isDirectory()) {
+            for (File class_folder : file.listFiles()) {
+                if(class_folder.isDirectory()) {
+                    for (File f : class_folder.listFiles()) {
+                        String file_path = f.getAbsolutePath();
+                        if (file_path.endsWith("au")) {
+                            System.out.println("Converting " + file_path + " ...");
+                            String output_image_path = file_path + ".png";
+                            MelSpectrogram melGram = new MelSpectrogram();
+                            melGram.setOutputFrameWidth(320);
+                            melGram.setOutputFrameHeight(240);
+                            BufferedImage image = melGram.convertAudio(f);
+                            File outputFile = new File(output_image_path);
+                            ImageIO.write(image, "png", outputFile);
+                        }
+                    }
                 }
             }
         }
