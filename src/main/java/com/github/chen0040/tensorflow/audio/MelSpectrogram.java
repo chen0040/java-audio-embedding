@@ -41,6 +41,8 @@ public class MelSpectrogram  implements PitchDetectionHandler {
     private int outputFrameWidth = 640*4;
     private int outputFrameHeight = 480*4;
 
+    private boolean wrapEnabled = false;
+
     String currentPitch = "";
     int position = 0;
 
@@ -97,6 +99,9 @@ public class MelSpectrogram  implements PitchDetectionHandler {
     private void drawFFT(double pitch, float[] amplitudes, FFT fft, BufferedImage bufferedImage) {
 
 
+        if(position >= outputFrameWidth && !wrapEnabled){
+            return;
+        }
 
 
         Graphics2D bufferedGraphics = bufferedImage.createGraphics();
@@ -200,8 +205,8 @@ public class MelSpectrogram  implements PitchDetectionHandler {
                             System.out.println("Converting " + file_path + " ...");
                             String output_image_path = file_path + ".png";
                             MelSpectrogram melGram = new MelSpectrogram();
-                            melGram.setOutputFrameWidth(320);
-                            melGram.setOutputFrameHeight(240);
+                            melGram.setOutputFrameWidth(1366);
+                            melGram.setOutputFrameHeight(96);
                             BufferedImage image = melGram.convertAudio(f);
                             File outputFile = new File(output_image_path);
                             ImageIO.write(image, "png", outputFile);
