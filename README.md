@@ -12,7 +12,11 @@ music classifier to recognize the genre of songs.
 After the gtzan data is download into [gtzan](gtzan) folder, unzip the files in that folder so that you have a
 folder structure like "gtzan/genres/(folder_with_class_label_as_name)"
 
-The Java class that can converts audio file (.au) in gtzan data set to image file (.png) is [MelSpectrogram.java](src/main/java/com/github/chen0040/tensorflow/audio/MelSpectrogram.java)
+The Java class that can converts audio file (.au) in gtzan data set to image file (.png) is
+ [MelSpectrogram.java](src/main/java/com/github/chen0040/tensorflow/audio/MelSpectrogram.java)
+ 
+[MelSpectrogram.java](src/main/java/com/github/chen0040/tensorflow/audio/MelSpectrogram.java) uses TarsosDSP to
+convert an audio file to a mel-spectrogram image.
   
 The following Java sample codes convert the audio file audio.au into a mel-spectrogram image:
 
@@ -32,7 +36,7 @@ To batch converts all audio files in the gtzan/genres to images, right click [Me
 and select "Run main() ..." in IntelliJ (or other IDE such as Eclipse), this will convert every .au file in 
 the gtzan/genres folder to the corresponding .png files in the same folders.
 
-### Train a audio classifier
+### Train a audio classifier using Keras in Python
 
 The classification works by converting audio or song file into a mel-spectrogram which can be thought of
 a 3-dimension matrix in a similar manner to an image 
@@ -90,17 +94,10 @@ After training, the trained models are saved to [demo/models](demo/models).
 * The training accuracy reached over 90% after 38 epochs.
 * The training accuracy after 100 epochs is 98.13%, with validation accuracy of 71%. 
 
-
-### Model Comparison
-
-Currently [ResNet50AudioClassifier](keras_audio/library/resnet50.py) is too expensive to run on my hardware (OOM exception
-from GPU). Below compares training quality of 
+Below compares training quality of 
 [ResNetV2AudioClassifier](keras_audio/library/resnet_v2.py) and [Cifar10AudioClassifier](keras_audio/library/cifar10.py):
 
 ![training-comppare](demo/models/training-history-comparison.png)
-
-
-### Test trained model
 
 To test the trained Cifar10AudioClassifier model, run the following command:
 
@@ -159,8 +156,6 @@ if __name__ == '__main__':
 
 ```
 
-### Obtain a tensorflow pb model
-
 The next step is to convert the trained keras model as tensorflow graph model file, run the following command:
 
 ```bash
@@ -182,7 +177,10 @@ The script [demo/cifar10_tensorflow_classifier.py](demo/cifar10_tensorflow_class
 to load the [cifar10.pb](demo/models/tensorflow_models/cifar10/cifar10.pb) and uses it to predict genres of the 
 songs
 
+### Music genres prediction using Tensorflow in Java
 
+We finally obtain a tensorflow pb file after the training, this can be loaded into tensorflow in a Java program and
+be used for music genres prediction.  
 
 
 # Note 
