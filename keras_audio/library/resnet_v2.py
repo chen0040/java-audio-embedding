@@ -3,6 +3,7 @@ from keras.callbacks import ModelCheckpoint
 from keras.layers import BatchNormalization, Input, Activation, Conv2D, MaxPooling2D, Add, GlobalAveragePooling2D, Dense
 import os
 import numpy as np
+from keras.preprocessing.image import load_img
 from lru import LRU
 
 from keras.utils import np_utils
@@ -111,7 +112,7 @@ class ResNetV2ImageClassifier(object):
                              dtype=np.float32)
                 for i in range(start, end):
                     audio_path = audio_paths[i]
-                    mg = compute_melgram(audio_path)
+                    mg = self.melgram(audio_path)
                     X[i - start, :, :, :] = mg
                 yield X, labels[start:end]
 
@@ -179,7 +180,7 @@ class ResNetV2ImageClassifier(object):
         return history
 
     def predict(self, audio_path):
-        mg = compute_melgram(audio_path)
+        mg = self.melgram(audio_path)
         mg = np.expand_dims(mg, axis=0)
         return self.model.predict(mg)[0]
 

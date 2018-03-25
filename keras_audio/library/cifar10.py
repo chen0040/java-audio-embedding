@@ -5,6 +5,7 @@ from keras.layers import Input, Add, Dense, Activation, ZeroPadding2D, BatchNorm
     AveragePooling2D, MaxPooling2D, GlobalMaxPooling2D, Dropout
 from keras.models import Model, load_model, Sequential
 from keras.preprocessing import image
+from keras.preprocessing.image import load_img
 from keras.utils import layer_utils, np_utils
 from keras.utils.data_utils import get_file
 from keras.applications.imagenet_utils import preprocess_input
@@ -196,7 +197,7 @@ class Cifar10ImageClassifier(object):
         return history
 
     def predict(self, audio_path):
-        mg = compute_melgram(audio_path)
+        mg = self.melgram(audio_path)
         mg = np.expand_dims(mg, axis=0)
         return self.model.predict(mg)[0]
 

@@ -3,7 +3,7 @@ keras
 numpy
 h5py
 scikit-learn
-tensorflow
+tensorflow-gpu
 matplotlib
 pandas
 lru-dict

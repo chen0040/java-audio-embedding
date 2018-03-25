@@ -1,3 +1,4 @@
+from keras.preprocessing.image import load_img
 from lru import LRU
 
 import keras.backend as K
@@ -376,7 +377,7 @@ class ResNet50ImageClassifier(object):
         return history
 
     def predict(self, audio_path):
-        mg = compute_melgram(audio_path)
+        mg = self.melgram(audio_path)
         mg = np.expand_dims(mg, axis=0)
         return self.model.predict(mg)[0]
 
