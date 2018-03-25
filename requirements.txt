@@ -1,0 +1,9 @@
+Flask == 0.12.2
+keras
+numpy
+h5py
+scikit-learn
+tensorflow
+matplotlib
+pandas
+lru-dict
