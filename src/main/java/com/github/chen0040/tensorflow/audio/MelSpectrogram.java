@@ -10,6 +10,7 @@ import be.tarsos.dsp.pitch.PitchDetectionResult;
 import be.tarsos.dsp.pitch.PitchProcessor;
 import be.tarsos.dsp.util.PitchConverter;
 import be.tarsos.dsp.util.fft.FFT;
+import com.github.chen0040.tensorflow.audio.consts.MelSpectrogramDimension;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -204,11 +205,15 @@ public class MelSpectrogram  implements PitchDetectionHandler {
                         if (file_path.endsWith("au")) {
                             System.out.println("Converting " + file_path + " ...");
                             String output_image_path = file_path + ".png";
-                            MelSpectrogram melGram = new MelSpectrogram();
-                            melGram.setOutputFrameWidth(1366);
-                            melGram.setOutputFrameHeight(96);
-                            BufferedImage image = melGram.convertAudio(f);
                             File outputFile = new File(output_image_path);
+
+                            if(outputFile.exists()) continue;
+
+                            MelSpectrogram melGram = new MelSpectrogram();
+                            melGram.setOutputFrameWidth(MelSpectrogramDimension.Width);
+                            melGram.setOutputFrameHeight(MelSpectrogramDimension.Height);
+                            BufferedImage image = melGram.convertAudio(f);
+
                             ImageIO.write(image, "png", outputFile);
                         }
                     }
