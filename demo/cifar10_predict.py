@@ -1,7 +1,7 @@
 from random import shuffle
 
 from demo.gtzan_utils import gtzan_labels
-from keras_audio.library.cifar10 import Cifar10ImageClassifier
+from keras_audio.library.cifar10 import Cifar10AudioClassifier
 
 
 def load_audio_path_label_pairs(max_allowed_pairs=None):
@@ -26,7 +26,7 @@ def main():
     shuffle(audio_path_label_pairs)
     print('loaded: ', len(audio_path_label_pairs))
 
-    classifier = Cifar10ImageClassifier()
+    classifier = Cifar10AudioClassifier()
     classifier.load_model(model_dir_path='./models')
 
     for i in range(0, 20):

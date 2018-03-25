@@ -1,9 +1,9 @@
-from keras_audio.library.cifar10 import Cifar10ImageClassifier
+from keras_audio.library.cifar10 import Cifar10AudioClassifier
 
 
 def main():
 
-    classifier = Cifar10ImageClassifier()
+    classifier = Cifar10AudioClassifier()
     classifier.load_model(model_dir_path='./models')
 
     classifier.export_tensorflow_model(output_fld='./models/tensorflow_models/cifar10')

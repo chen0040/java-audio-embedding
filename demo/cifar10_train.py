@@ -1,4 +1,4 @@
-from keras_audio.library.cifar10 import Cifar10ImageClassifier
+from keras_audio.library.cifar10 import Cifar10AudioClassifier
 
 
 def load_audio_path_label_pairs(max_allowed_pairs=None):
@@ -22,7 +22,7 @@ def main():
     audio_path_label_pairs = load_audio_path_label_pairs()
     print('loaded: ', len(audio_path_label_pairs))
 
-    classifier = Cifar10ImageClassifier()
+    classifier = Cifar10AudioClassifier()
     batch_size = 8
     epochs = 100
     history = classifier.fit(audio_path_label_pairs, model_dir_path='./models', batch_size=batch_size, epochs=epochs)

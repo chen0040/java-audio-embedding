@@ -68,7 +68,7 @@ def cifar10(input_shape, nb_classes):
     return model
 
 
-class Cifar10ImageClassifier(object):
+class Cifar10AudioClassifier(object):
     model_name = 'cifar10'
 
     def __init__(self):
@@ -86,19 +86,19 @@ class Cifar10ImageClassifier(object):
 
     @staticmethod
     def get_config_file_path(model_dir_path):
-        return os.path.join(model_dir_path, Cifar10ImageClassifier.model_name + '-config.npy')
+        return os.path.join(model_dir_path, Cifar10AudioClassifier.model_name + '-config.npy')
 
     @staticmethod
     def get_architecture_file_path(model_dir_path):
-        return os.path.join(model_dir_path, Cifar10ImageClassifier.model_name + '-architecture.json')
+        return os.path.join(model_dir_path, Cifar10AudioClassifier.model_name + '-architecture.json')
 
     @staticmethod
     def get_weight_file_path(model_dir_path):
-        return os.path.join(model_dir_path, Cifar10ImageClassifier.model_name + '-weights.h5')
+        return os.path.join(model_dir_path, Cifar10AudioClassifier.model_name + '-weights.h5')
 
     def load_model(self, model_dir_path):
-        config_file_path = Cifar10ImageClassifier.get_config_file_path(model_dir_path)
-        weight_file_path = Cifar10ImageClassifier.get_weight_file_path(model_dir_path)
+        config_file_path = Cifar10AudioClassifier.get_config_file_path(model_dir_path)
+        weight_file_path = Cifar10AudioClassifier.get_weight_file_path(model_dir_path)
         self.config = np.load(config_file_path).item()
         self.input_shape = self.config['input_shape']
         self.nb_classes = self.config['nb_classes']
@@ -148,9 +148,9 @@ class Cifar10ImageClassifier(object):
         if nb_classes is None:
             nb_classes = 10
 
-        config_file_path = Cifar10ImageClassifier.get_config_file_path(model_dir_path)
-        weight_file_path = Cifar10ImageClassifier.get_weight_file_path(model_dir_path)
-        architecture_file_path = Cifar10ImageClassifier.get_architecture_file_path(model_dir_path)
+        config_file_path = Cifar10AudioClassifier.get_config_file_path(model_dir_path)
+        weight_file_path = Cifar10AudioClassifier.get_weight_file_path(model_dir_path)
+        architecture_file_path = Cifar10AudioClassifier.get_architecture_file_path(model_dir_path)
 
         self.input_shape = input_shape
         self.nb_classes = nb_classes
@@ -193,7 +193,7 @@ class Cifar10ImageClassifier(object):
                                            callbacks=[checkpoint])
         self.model.save_weights(weight_file_path)
 
-        np.save(os.path.join(model_dir_path, Cifar10ImageClassifier.model_name + '-history.npy'), history.history)
+        np.save(os.path.join(model_dir_path, Cifar10AudioClassifier.model_name + '-history.npy'), history.history)
         return history
 
     def predict(self, audio_path):
@@ -215,7 +215,7 @@ class Cifar10ImageClassifier(object):
         K.set_learning_phase(0)
 
         if output_model_file is None:
-            output_model_file = Cifar10ImageClassifier.model_name + '.pb'
+            output_model_file = Cifar10AudioClassifier.model_name + '.pb'
 
         if output_graphdef_file is None:
             output_graphdef_file = 'model.ascii'

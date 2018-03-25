@@ -50,7 +50,7 @@ def resnet(input_shape, classes):
     return model
 
 
-class ResNetV2ImageClassifier(object):
+class ResNetV2AudioClassifier(object):
     model_name = 'resnet-v2'
 
     def __init__(self):
@@ -68,19 +68,19 @@ class ResNetV2ImageClassifier(object):
 
     @staticmethod
     def get_config_file_path(model_dir_path):
-        return os.path.join(model_dir_path, ResNetV2ImageClassifier.model_name + '-config.npy')
+        return os.path.join(model_dir_path, ResNetV2AudioClassifier.model_name + '-config.npy')
 
     @staticmethod
     def get_architecture_file_path(model_dir_path):
-        return os.path.join(model_dir_path, ResNetV2ImageClassifier.model_name + '-architecture.json')
+        return os.path.join(model_dir_path, ResNetV2AudioClassifier.model_name + '-architecture.json')
 
     @staticmethod
     def get_weight_file_path(model_dir_path):
-        return os.path.join(model_dir_path, ResNetV2ImageClassifier.model_name + '-weights.h5')
+        return os.path.join(model_dir_path, ResNetV2AudioClassifier.model_name + '-weights.h5')
 
     def load_model(self, model_dir_path):
-        config_file_path = ResNetV2ImageClassifier.get_config_file_path(model_dir_path)
-        weight_file_path = ResNetV2ImageClassifier.get_weight_file_path(model_dir_path)
+        config_file_path = ResNetV2AudioClassifier.get_config_file_path(model_dir_path)
+        weight_file_path = ResNetV2AudioClassifier.get_weight_file_path(model_dir_path)
         self.config = np.load(config_file_path).item()
         self.input_shape = self.config['input_shape']
         self.nb_classes = self.config['nb_classes']
@@ -176,7 +176,7 @@ class ResNetV2ImageClassifier(object):
                                            callbacks=[checkpoint])
         self.model.save_weights(weight_file_path)
 
-        np.save(os.path.join(model_dir_path, ResNetV2ImageClassifier.model_name + '-history.npy'), history.history)
+        np.save(os.path.join(model_dir_path, ResNetV2AudioClassifier.model_name + '-history.npy'), history.history)
         return history
 
     def predict(self, audio_path):

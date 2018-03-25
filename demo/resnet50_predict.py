@@ -1,6 +1,6 @@
 from random import shuffle
 
-from keras_audio.library.resnet50 import ResNet50ImageClassifier
+from keras_audio.library.resnet50 import ResNet50AudioClassifier
 from demo.gtzan_utils import gtzan_labels
 
 
@@ -27,7 +27,7 @@ def main():
     shuffle(audio_path_label_pairs)
     print('loaded: ', len(audio_path_label_pairs))
 
-    classifier = ResNet50ImageClassifier()
+    classifier = ResNet50AudioClassifier()
     classifier.load_model(model_dir_path='./models')
 
     for i in range(0, 20):

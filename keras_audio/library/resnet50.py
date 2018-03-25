@@ -248,7 +248,7 @@ def resnet_50_test():
     print("Test Accuracy = " + str(preds[1]))
 
 
-class ResNet50ImageClassifier(object):
+class ResNet50AudioClassifier(object):
     model_name = 'resnet50'
 
     def __init__(self):
@@ -266,19 +266,19 @@ class ResNet50ImageClassifier(object):
 
     @staticmethod
     def get_config_file_path(model_dir_path):
-        return os.path.join(model_dir_path, ResNet50ImageClassifier.model_name + '-config.npy')
+        return os.path.join(model_dir_path, ResNet50AudioClassifier.model_name + '-config.npy')
 
     @staticmethod
     def get_architecture_file_path(model_dir_path):
-        return os.path.join(model_dir_path, ResNet50ImageClassifier.model_name + '-architecture.json')
+        return os.path.join(model_dir_path, ResNet50AudioClassifier.model_name + '-architecture.json')
 
     @staticmethod
     def get_weight_file_path(model_dir_path):
-        return os.path.join(model_dir_path, ResNet50ImageClassifier.model_name + '-weights.h5')
+        return os.path.join(model_dir_path, ResNet50AudioClassifier.model_name + '-weights.h5')
 
     def load_model(self, model_dir_path):
-        config_file_path = ResNet50ImageClassifier.get_config_file_path(model_dir_path)
-        weight_file_path = ResNet50ImageClassifier.get_weight_file_path(model_dir_path)
+        config_file_path = ResNet50AudioClassifier.get_config_file_path(model_dir_path)
+        weight_file_path = ResNet50AudioClassifier.get_weight_file_path(model_dir_path)
         self.config = np.load(config_file_path).item()
         self.input_shape = self.config['input_shape']
         self.nb_classes = self.config['nb_classes']
@@ -328,9 +328,9 @@ class ResNet50ImageClassifier(object):
         if nb_classes is None:
             nb_classes = 10
 
-        config_file_path = ResNet50ImageClassifier.get_config_file_path(model_dir_path)
-        weight_file_path = ResNet50ImageClassifier.get_weight_file_path(model_dir_path)
-        architecture_file_path = ResNet50ImageClassifier.get_architecture_file_path(model_dir_path)
+        config_file_path = ResNet50AudioClassifier.get_config_file_path(model_dir_path)
+        weight_file_path = ResNet50AudioClassifier.get_weight_file_path(model_dir_path)
+        architecture_file_path = ResNet50AudioClassifier.get_architecture_file_path(model_dir_path)
 
         self.input_shape = input_shape
         self.nb_classes = nb_classes
@@ -373,7 +373,7 @@ class ResNet50ImageClassifier(object):
                                            callbacks=[checkpoint])
         self.model.save_weights(weight_file_path)
 
-        np.save(os.path.join(model_dir_path, ResNet50ImageClassifier.model_name + '-history.npy'), history.history)
+        np.save(os.path.join(model_dir_path, ResNet50AudioClassifier.model_name + '-history.npy'), history.history)
         return history
 
     def predict(self, audio_path):

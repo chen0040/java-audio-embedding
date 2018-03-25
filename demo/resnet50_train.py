@@ -1,4 +1,4 @@
-from keras_audio.library.resnet50 import ResNet50ImageClassifier
+from keras_audio.library.resnet50 import ResNet50AudioClassifier
 
 
 
@@ -24,7 +24,7 @@ def main():
     audio_path_label_pairs = load_audio_path_label_pairs()
     print('loaded: ', len(audio_path_label_pairs))
 
-    classifier = ResNet50ImageClassifier()
+    classifier = ResNet50AudioClassifier()
     batch_size = 2
     epochs = 10
     history = classifier.fit(audio_path_label_pairs, model_dir_path='./models', batch_size=batch_size, epochs=epochs)
