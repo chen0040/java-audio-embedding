@@ -2,12 +2,10 @@ from random import shuffle
 import tensorflow as tf
 import numpy as np
 
-from keras_audio.library.utility.audio_utils import compute_melgram
-from keras_audio.library.utility.gtzan_loader import download_gtzan_genres_if_not_found, gtzan_labels
+from demo.gtzan_utils import gtzan_labels
 
 
 def load_audio_path_label_pairs(max_allowed_pairs=None):
-    download_gtzan_genres_if_not_found('./very_large_data/gtzan')
     audio_paths = []
     with open('./data/lists/test_songs_gtzan_list.txt', 'rt') as file:
         for line in file:
@@ -22,6 +20,12 @@ def load_audio_path_label_pairs(max_allowed_pairs=None):
             else:
                 break
     return pairs
+
+
+def melgram(audio_path):
+    img_path = audio_path + '.png'
+    img = load_img(img_path)
+    return img
 
 
 def main():
@@ -40,7 +44,7 @@ def main():
         for i in range(0, 20):
             audio_path, actual_label_id = audio_path_label_pairs[i]
 
-            mg = compute_melgram(audio_path)
+            mg = melgram(audio_path)
             mg = np.expand_dims(mg, axis=0)
 
             predicted = sess.run(predict_op, feed_dict={"conv2d_1_input:0": mg})

@@ -1,5 +1,5 @@
 from keras_audio.library.utility.audio_utils import compute_melgram
-from keras_audio.library.utility.gtzan_loader import download_gtzan_genres_if_not_found
+
 import numpy as np
 
 def load_audio_path_label_pairs(max_allowed_pairs=None):
