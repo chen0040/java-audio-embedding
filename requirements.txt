@@ -7,3 +7,4 @@ tensorflow-gpu
 matplotlib
 pandas
 lru-dict
+pillow

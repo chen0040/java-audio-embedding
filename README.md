@@ -4,9 +4,17 @@ Audio embedding in Java
 
 # Usage
 
-### Convert an audio file to mel-spectrogram image
+### Generate training data in Java
 
-The following sample codes convert the audio file audio.au into a mel-spectrogram image:
+The audio classification uses [Gtzan](http://opihi.cs.uvic.ca/sound/genres.tar.gz) data set to train the
+music classifier to recognize the genre of songs. 
+
+After the gtzan data is download into [gtzan](gtzan) folder, unzip the files in that folder so that you have a
+folder structure like "gtzan/genres/(folder_with_class_label_as_name)"
+
+The Java class that can converts audio file (.au) in gtzan data set to image file (.png) is [MelSpectrogram.java](src/main/java/com/github/chen0040/tensorflow/audio/MelSpectrogram.java)
+  
+The following Java sample codes convert the audio file audio.au into a mel-spectrogram image:
 
 ```java
 import com.github.chen0040.tensorflow.audio.MelSpectrogram;
@@ -20,10 +28,11 @@ File outputFile = new File("outputs/saved.png");
 ImageIO.write(image, "png", outputFile);
 ```
 
-### Train a audio classifier
+To batch converts all audio files in the gtzan/genres to images, right click [MelSpectrogram.java](src/main/java/com/github/chen0040/tensorflow/audio/MelSpectrogram.java)
+and select "Run main() ..." in IntelliJ (or other IDE such as Eclipse), this will convert every .au file in 
+the gtzan/genres folder to the corresponding .png files in the same folders.
 
-The audio classification uses [Gtzan](http://opihi.cs.uvic.ca/sound/genres.tar.gz) data set to train the
-music classifier to recognize the genre of songs. 
+### Train a audio classifier
 
 The classification works by converting audio or song file into a mel-spectrogram which can be thought of
 a 3-dimension matrix in a similar manner to an image 
