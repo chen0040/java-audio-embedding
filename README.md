@@ -2,6 +2,15 @@
 
 Audio embedding in Java
 
+The current project attempts to develop a pure Java audio encoder that can be used in pure Java or Android program. 
+Such an audio encoder can be used for music genres classification or music search, or music recommend-er.
+
+The machine learning package in Java is tensorflow, it loads a pre-trained audio classifier model (.pb format).
+The audio classifier model was originally implemented and trained using Keras in Python. This trained
+classifier model (in .h5 format) was then converted to .pb model file which can be directly loaded by tensorflow in Java.
+
+
+
 # Usage
 
 ### Generate training data in Java
@@ -9,7 +18,7 @@ Audio embedding in Java
 The audio classification uses [Gtzan](http://opihi.cs.uvic.ca/sound/genres.tar.gz) data set to train the
 music classifier to recognize the genre of songs. 
 
-After the gtzan data is download into [gtzan](gtzan) folder, unzip the files in that folder so that you have a
+After the gtzan data is download into [gtzan](gtzan) folder, extract the files into that folder so that you have a
 folder structure like "gtzan/genres/(folder_with_class_label_as_name)"
 
 The Java class that can converts audio file (.au) in gtzan data set to image file (.png) is
@@ -185,7 +194,7 @@ be used for music genres prediction.
 
 # Note 
 
-# Configure Keras to run on GPU on Windows
+### Configure Keras to run on GPU on Windows
 
 * Step 1: Change tensorflow to tensorflow-gpu in requirements.txt and install tensorflow-gpu
 * Step 2: Download and install the [CUDA® Toolkit 9.0](https://developer.nvidia.com/cuda-90-download-archive) (Please note that
