@@ -6,7 +6,11 @@
 
     <groupId>com.github.chen0040</groupId>
     <artifactId>java-audio-encoding</artifactId>
+    <packaging>pom</packaging>
     <version>1.0.1</version>
+    <modules>
+        <module>deeplearning4j-img-classifiers</module>
+    </modules>
 
 
     <properties>
@@ -123,12 +127,6 @@
             <systemPath>${project.basedir}/src/main/lib/TarsosDSP-latest.jar</systemPath>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.deeplearning4j/deeplearning4j-core -->
-        <dependency>
-            <groupId>org.deeplearning4j</groupId>
-            <artifactId>deeplearning4j-core</artifactId>
-            <version>0.9.1</version>
-        </dependency>
 
     </dependencies>
 </project>

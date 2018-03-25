@@ -1,8 +1,17 @@
-package com.github.chen0040.tensorflow.audio;
+package com.github.chen0040.dl4j.classifiers;
 
-import com.github.chen0040.tensorflow.audio.consts.MelSpectrogramDimension;
 import lombok.Getter;
 import lombok.Setter;
+import org.datavec.api.io.filters.BalancedPathFilter;
+import org.datavec.api.io.labels.ParentPathLabelGenerator;
+import org.datavec.api.split.FileSplit;
+import org.datavec.api.split.InputSplit;
+import org.datavec.image.recordreader.ImageRecordReader;
+import org.datavec.image.transform.FlipImageTransform;
+import org.datavec.image.transform.ImageTransform;
+import org.datavec.image.transform.MultiImageTransform;
+import org.datavec.image.transform.ShowImageTransform;
+import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
 import org.deeplearning4j.nn.conf.*;
 import org.deeplearning4j.nn.conf.inputs.InputType;
@@ -11,11 +20,16 @@ import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.deeplearning4j.util.ModelSerializer;
 import org.nd4j.linalg.activations.Activation;
+import org.nd4j.linalg.api.buffer.DataBuffer;
+import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
+import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.Random;
 
 @Getter
 @Setter
@@ -33,14 +47,48 @@ public class CifarAudioClassifier {
     int seed = 123;
     int listenerFreq = 5;
 
-    private int numLabels = 10;
+
+    private Random randNumGen = new Random();
 
     private static final Logger logger = LoggerFactory.getLogger(CifarAudioClassifier.class);
 
-    public CifarAudioClassifier(){
+    private MultiLayerNetwork model = null;
 
+    public CifarAudioClassifier(){
+        Nd4j.setDataType(DataBuffer.Type.DOUBLE);
     }
-    
+
+    public MultiLayerNetwork fit_images(String dir_path, String[] allowedExtensions) throws IOException {
+        this.model = createModel();
+
+        DataSetIterator dataSetIterator = scanFolder(dir_path, allowedExtensions);
+        this.model.fit(dataSetIterator);
+
+        return this.model;
+    }
+
+    public DataSetIterator scanFolder(String dir_path, String[] allowedExtensions) throws IOException {
+        File parentDir = new File(dir_path);
+
+        FileSplit filesInDir = new FileSplit(parentDir, allowedExtensions, randNumGen);
+        ParentPathLabelGenerator labelMaker = new ParentPathLabelGenerator();
+
+        BalancedPathFilter pathFilter = new BalancedPathFilter(randNumGen, allowedExtensions, labelMaker);
+        InputSplit[] filesInDirSplit = filesInDir.sample(pathFilter, 80, 20);
+        InputSplit trainData = filesInDirSplit[0];
+        InputSplit testData = filesInDirSplit[1];
+
+        ImageRecordReader recordReader = new ImageRecordReader(height,width,channels,labelMaker);
+
+        ImageTransform transform = new MultiImageTransform(randNumGen,new FlipImageTransform(), new ShowImageTransform("After transform"));
+
+        recordReader.initialize(trainData,transform);
+
+        DataSetIterator dataIter = new RecordReaderDataSetIterator(recordReader, 10, 1, outputNum);
+
+        return dataIter;
+    }
+
 
     private MultiLayerNetwork createModel() {
 
@@ -91,7 +139,7 @@ public class CifarAudioClassifier {
                 .layer(13,new DropoutLayer.Builder().name("dropout2").dropOut(0.2).build())
                 .layer(14, new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
                         .name("output")
-                        .nOut(numLabels)
+                        .nOut(outputNum)
                         .activation(Activation.SOFTMAX)
                         .build())
                 .backprop(true)
