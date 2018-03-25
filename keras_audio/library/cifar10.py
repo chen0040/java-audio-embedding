@@ -5,7 +5,7 @@ from keras.layers import Input, Add, Dense, Activation, ZeroPadding2D, BatchNorm
     AveragePooling2D, MaxPooling2D, GlobalMaxPooling2D, Dropout
 from keras.models import Model, load_model, Sequential
 from keras.preprocessing import image
-from keras.preprocessing.image import load_img
+from keras.preprocessing.image import load_img, img_to_array
 from keras.utils import layer_utils, np_utils
 from keras.utils.data_utils import get_file
 from keras.applications.imagenet_utils import preprocess_input
@@ -107,7 +107,7 @@ class Cifar10ImageClassifier(object):
 
     def melgram(self, audio_path):
         img_path = audio_path + '.png'
-        img = load_img(img_path)
+        img = img_to_array(load_img(img_path))
         return img
 
     def compute_melgram(self, audio_path):

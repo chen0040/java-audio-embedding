@@ -24,7 +24,7 @@ def load_audio_path_label_pairs(max_allowed_pairs=None):
 
 def melgram(audio_path):
     img_path = audio_path + '.png'
-    img = load_img(img_path)
+    img = img_to_array(load_img(img_path))
     return img
 
 

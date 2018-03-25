@@ -3,7 +3,7 @@ from keras.callbacks import ModelCheckpoint
 from keras.layers import BatchNormalization, Input, Activation, Conv2D, MaxPooling2D, Add, GlobalAveragePooling2D, Dense
 import os
 import numpy as np
-from keras.preprocessing.image import load_img
+from keras.preprocessing.image import load_img, img_to_array
 from lru import LRU
 
 from keras.utils import np_utils
@@ -89,7 +89,7 @@ class ResNetV2ImageClassifier(object):
 
     def melgram(self, audio_path):
         img_path = audio_path + '.png'
-        img = load_img(img_path)
+        img = img_to_array(load_img(img_path))
         return img
 
     def compute_melgram(self, audio_path):

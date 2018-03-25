@@ -1,4 +1,4 @@
-from keras.preprocessing.image import load_img
+from keras.preprocessing.image import load_img, img_to_array
 from lru import LRU
 
 import keras.backend as K
@@ -287,7 +287,7 @@ class ResNet50ImageClassifier(object):
 
     def melgram(self, audio_path):
         img_path = audio_path + '.png'
-        img = load_img(img_path)
+        img = img_to_array(load_img(img_path))
         return img
 
     def compute_melgram(self, audio_path):
