@@ -22,10 +22,10 @@ After the gtzan data is download into [gtzan](gtzan) folder, extract the files i
 folder structure like "gtzan/genres/(folder_with_class_label_as_name)"
 
 The Java class that can converts audio file (.au) in gtzan data set to image file (.png) is
- [MelSpectrogram.java](src/main/java/com/github/chen0040/tensorflow/audio/MelSpectrogram.java)
+ [MelSpectrogram.java](java_audio_melgram/src/main/java/com/github/chen0040/tensorflow/audio/MelSpectrogram.java)
  
-[MelSpectrogram.java](src/main/java/com/github/chen0040/tensorflow/audio/MelSpectrogram.java) uses TarsosDSP to
-convert an audio file to a mel-spectrogram image.
+[MelSpectrogram.java](java_audio_melgram/src/main/java/com/github/chen0040/tensorflow/audio/MelSpectrogram.java) uses 
+TarsosDSP to convert an audio file to a mel-spectrogram image.
   
 The following Java sample codes convert the audio file audio.au into a mel-spectrogram image:
 

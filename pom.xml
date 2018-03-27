@@ -9,7 +9,8 @@
     <packaging>pom</packaging>
     <version>1.0.1</version>
     <modules>
-        <module>deeplearning4j-img-classifiers</module>
+        <module>java_audio_classifier</module>
+        <module>java_audio_melgram</module>
     </modules>
 
 
@@ -119,13 +120,6 @@
 
         <!-- Utilities -->
 
-        <dependency>
-            <groupId>be.tarsos.dsp</groupId>
-            <artifactId>tarsos</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/lib/TarsosDSP-latest.jar</systemPath>
-        </dependency>
 
 
     </dependencies>
