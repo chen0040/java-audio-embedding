@@ -7,11 +7,14 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
 public class TensorUtils {
-    public static Tensor<Float> getImageTensorScaled(BufferedImage image, int imgWidth, int imgHeight) {
+    public static Tensor<Float> getImageTensor(BufferedImage image, int imgWidth, int imgHeight) {
 
         final int channels = 1;
+
+        System.out.println("width: " + imgWidth + ", height: " + imgHeight);
         // Generate image file to array
         int index = 0;
         FloatBuffer fb = FloatBuffer.allocate(imgWidth * imgHeight * channels);
@@ -29,6 +32,6 @@ public class TensorUtils {
             }
         }
 
-        return Tensor.create(new long[]{1, imgWidth, imgHeight, channels}, fb);
+        return Tensor.create(new long[]{1, imgHeight, imgWidth, channels}, fb);
     }
 }

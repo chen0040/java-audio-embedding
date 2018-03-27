@@ -8,10 +8,10 @@ import com.github.chen0040.tensorflow.classifiers.utils.TensorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tensorflow.Graph;
+import org.tensorflow.Operation;
 import org.tensorflow.Session;
 import org.tensorflow.Tensor;
 
-import javax.imageio.ImageIO;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import java.awt.image.BufferedImage;
@@ -19,7 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.UUID;
+import java.util.Iterator;
 
 public class Cifar10ImageClassifier implements AutoCloseable {
 
@@ -31,6 +31,7 @@ public class Cifar10ImageClassifier implements AutoCloseable {
     public void load_model(InputStream inputStream) throws IOException {
         byte[] bytes = InputStreamUtils.getBytes(inputStream);
         graph.importGraphDef(bytes);
+
     }
 
     private static final String[] labels = new String[]{
@@ -51,12 +52,14 @@ public class Cifar10ImageClassifier implements AutoCloseable {
 
         image = ImageUtils.resizeImage(image, imgWidth, imgHeight);
 
-        Tensor<Float> imageTensor = TensorUtils.getImageTensorScaled(image, imgWidth, imgHeight);
+        Tensor<Float> imageTensor = TensorUtils.getImageTensor(image, imgWidth, imgHeight);
+
+
 
         try (Session sess = new Session(graph);
              Tensor<Float> result =
                      sess.runner().feed("conv2d_1_input:0", imageTensor)
-                             .feed("dropout_1/keras_learning_phase:0", Tensor.create(false))
+                             //.feed("dropout_1/keras_learning_phase:0", Tensor.create(false))
                              .fetch("output_node0:0").run().get(0).expect(Float.class)) {
             final long[] rshape = result.shape();
             if (result.numDimensions() != 2 || rshape[0] != 1) {
