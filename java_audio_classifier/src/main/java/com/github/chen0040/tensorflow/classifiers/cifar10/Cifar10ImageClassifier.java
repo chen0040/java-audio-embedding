@@ -1,5 +1,7 @@
 package com.github.chen0040.tensorflow.classifiers.cifar10;
 
+import com.github.chen0040.tensorflow.audio.MelSpectrogram;
+import com.github.chen0040.tensorflow.audio.consts.MelSpectrogramDimension;
 import com.github.chen0040.tensorflow.classifiers.utils.ImageUtils;
 import com.github.chen0040.tensorflow.classifiers.utils.InputStreamUtils;
 import com.github.chen0040.tensorflow.classifiers.utils.TensorUtils;
@@ -9,10 +11,15 @@ import org.tensorflow.Graph;
 import org.tensorflow.Session;
 import org.tensorflow.Tensor;
 
+import javax.imageio.ImageIO;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.UUID;
 
 public class Cifar10ImageClassifier implements AutoCloseable {
 
@@ -27,22 +34,17 @@ public class Cifar10ImageClassifier implements AutoCloseable {
     }
 
     private static final String[] labels = new String[]{
-            "airplane",
-            "automobile",
-            "bird",
-            "cat",
-            "deer",
-            "dog",
-            "frog",
-            "horse",
-            "ship",
-            "truck"
+
+        "blues", "classical", "country", "disco", "hiphop", "jazz", "metal",
+                "pop", "reggae", "rock"
+
     };
 
     private static final Logger logger = LoggerFactory.getLogger(Cifar10ImageClassifier.class);
 
     public String predict_image(BufferedImage image) {
-        return predict_image(image, 32, 32);
+        return predict_image(image, MelSpectrogramDimension.Width,
+                MelSpectrogramDimension.Height);
     }
 
     public String predict_image(BufferedImage image, int imgWidth, int imgHeight){
@@ -77,6 +79,7 @@ public class Cifar10ImageClassifier implements AutoCloseable {
             return labels[argmax];
         } catch(Exception ex) {
             logger.error("Failed to predict image", ex);
+            ex.printStackTrace();
         }
 
         return "unknown";
@@ -88,5 +91,21 @@ public class Cifar10ImageClassifier implements AutoCloseable {
             graph.close();
             graph = null;
         }
+    }
+
+    public String predict_audio(File f) {
+        MelSpectrogram melGram = new MelSpectrogram();
+        melGram.setOutputFrameWidth(MelSpectrogramDimension.Width);
+        melGram.setOutputFrameHeight(MelSpectrogramDimension.Height);
+
+
+        try {
+            BufferedImage image = melGram.convertAudio(f);
+            return predict_image(image);
+        } catch (IOException | UnsupportedAudioFileException | LineUnavailableException e) {
+            e.printStackTrace();
+        }
+
+        return "NA";
     }
 }

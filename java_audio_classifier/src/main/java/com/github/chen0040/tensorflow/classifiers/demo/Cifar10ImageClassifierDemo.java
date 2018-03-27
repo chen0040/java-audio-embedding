@@ -1,11 +1,15 @@
 package com.github.chen0040.tensorflow.classifiers.demo;
 
+import com.github.chen0040.tensorflow.audio.MelSpectrogram;
+import com.github.chen0040.tensorflow.audio.consts.MelSpectrogramDimension;
 import com.github.chen0040.tensorflow.classifiers.cifar10.Cifar10ImageClassifier;
 import com.github.chen0040.tensorflow.classifiers.utils.ResourceUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -16,30 +20,27 @@ public class Cifar10ImageClassifierDemo {
     public static void main(String[] args) throws IOException {
 
 
-        InputStream inputStream = ResourceUtils.getInputStream("tf_models/cnn_cifar10.pb");
+        InputStream inputStream = ResourceUtils.getInputStream("tf_models/cifar10.pb");
         Cifar10ImageClassifier classifier = new Cifar10ImageClassifier();
         classifier.load_model(inputStream);
 
-        String[] image_names = new String[] {
-                "airplane1",
-                "airplane2",
-                "airplane3",
-                "automobile1",
-                "automobile2",
-                "automobile3",
-                "bird1",
-                "bird2",
-                "bird3",
-                "cat1",
-                "cat2",
-                "cat3"
-        };
+        File file = new File("gtzan/genres");
+        System.out.println(file.getAbsolutePath());
+        if(file.isDirectory()) {
+            for (File class_folder : file.listFiles()) {
+                if(class_folder.isDirectory()) {
+                    for (File f : class_folder.listFiles()) {
+                        String file_path = f.getAbsolutePath();
+                        if (file_path.endsWith("au")) {
+                            System.out.println("Predicting " + file_path + " ...");
+                            String label = classifier.predict_audio(f);
 
-        for(String image_name :image_names) {
-            String image_path = "images/cifar10/" + image_name + ".png";
-            BufferedImage img = ResourceUtils.getImage(image_path);
-            String predicted_label = classifier.predict_image(img);
-            logger.info("predicted class for {}: {}", image_name, predicted_label);
+                            System.out.println("Predicted: " + label);
+
+                        }
+                    }
+                }
+            }
         }
     }
 }
