@@ -26,24 +26,17 @@ The Java class that can converts audio file (.au) in gtzan data set to image fil
  
 [MelSpectrogram.java](java_audio_melgram/src/main/java/com/github/chen0040/tensorflow/audio/MelSpectrogram.java) uses 
 TarsosDSP to convert an audio file to a mel-spectrogram image.
-  
-The following Java sample codes convert the audio file audio.au into a mel-spectrogram image:
 
-```java
-import com.github.chen0040.tensorflow.audio.MelSpectrogram;
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
-
-MelSpectrogram melGram = new MelSpectrogram();
-BufferedImage image = melGram.convertAudio(new File("samples/audio.au"));
-File outputFile = new File("outputs/saved.png");
-ImageIO.write(image, "png", outputFile);
-```
 
 To batch converts all audio files in the gtzan/genres to images, right click [MelSpectrogram.java](src/main/java/com/github/chen0040/tensorflow/audio/MelSpectrogram.java)
 and select "Run main() ..." in IntelliJ (or other IDE such as Eclipse), this will convert every .au file in 
 the gtzan/genres folder to the corresponding .png files in the same folders.
+
+Alternative, you run the following commands at the root to do the conversion:
+
+```bash
+java -jar java_audio_melgram.jar
+```
 
 ### Train a audio classifier using Keras in Python
 
