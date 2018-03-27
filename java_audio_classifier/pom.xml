@@ -29,12 +29,12 @@
         </dependency>
 
         <dependency>
-            <groupId>be.tarsos.dsp</groupId>
-            <artifactId>tarsos</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/lib/TarsosDSP-latest.jar</systemPath>
+            <groupId>com.github.chen0040</groupId>
+            <artifactId>java_audio_melgram</artifactId>
+            <version>1.0.1</version>
         </dependency>
+
+
 
     </dependencies>
 
@@ -58,7 +58,7 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <finalName>image-classifier</finalName>
+                            <finalName>java_audio_classifier</finalName>
                             <transformers>
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">

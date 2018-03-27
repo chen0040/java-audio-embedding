@@ -12,13 +12,40 @@
     <artifactId>java_audio_melgram</artifactId>
 
 
-    <dependencies>
-        <dependency>
-            <groupId>be.tarsos.dsp</groupId>
-            <artifactId>tarsos</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/lib/TarsosDSP-latest.jar</systemPath>
-        </dependency>
-    </dependencies>
+
+
+
+    <build>
+
+
+
+        <plugins>
+
+
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.4.3</version>
+
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <finalName>java_audio_melgram</finalName>
+                            <transformers>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>com.github.chen0040.tensorflow.audio.MelSpectrogram</mainClass>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

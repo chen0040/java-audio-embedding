@@ -120,7 +120,10 @@
 
         <!-- Utilities -->
 
-
-
+        <dependency>
+            <groupId>com.github.axet</groupId>
+            <artifactId>TarsosDSP</artifactId>
+            <version>2.4-1</version>
+        </dependency>
     </dependencies>
 </project>
