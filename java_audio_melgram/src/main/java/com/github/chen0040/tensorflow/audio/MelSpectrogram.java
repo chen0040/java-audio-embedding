@@ -197,6 +197,7 @@ public class MelSpectrogram  implements PitchDetectionHandler {
 
     public static void main(String[] args) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
         File file = new File("gtzan/genres");
+        System.out.println(file.getAbsolutePath());
         if(file.isDirectory()) {
             for (File class_folder : file.listFiles()) {
                 if(class_folder.isDirectory()) {
