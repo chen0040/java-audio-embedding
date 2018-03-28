@@ -8,7 +8,6 @@ import com.github.chen0040.tensorflow.classifiers.utils.TensorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tensorflow.Graph;
-import org.tensorflow.Operation;
 import org.tensorflow.Session;
 import org.tensorflow.Tensor;
 
@@ -19,12 +18,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Iterator;
 
-public class Cifar10ImageClassifier implements AutoCloseable {
+public class Cifar10AudioClassifier implements AutoCloseable {
 
     private Graph graph = new Graph();
-    public Cifar10ImageClassifier() {
+    public Cifar10AudioClassifier() {
 
     }
 
@@ -41,7 +39,7 @@ public class Cifar10ImageClassifier implements AutoCloseable {
 
     };
 
-    private static final Logger logger = LoggerFactory.getLogger(Cifar10ImageClassifier.class);
+    private static final Logger logger = LoggerFactory.getLogger(Cifar10AudioClassifier.class);
 
     public String predict_image(BufferedImage image) {
         return predict_image(image, MelSpectrogramDimension.Width,

@@ -18,8 +18,12 @@ classifier model (in .h5 format) was then converted to .pb model file which can 
 The keras training of audio classifier model can be found in [README_Training.md](README_Training.md)
 
 ### Audio Classifier 
+The [sample codes](java_audio_classifier/src/main/java/com/github/chen0040/tensorflow/classifiers/demo/Cifar10ImageClassifierDemo.java) 
+below shows how to use the audio classifier to predict the genres of music:
 
-To 
+```java
+
+```  
 
 
 

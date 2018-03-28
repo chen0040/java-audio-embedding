@@ -156,7 +156,7 @@ as [keras_audio_classifier/demo/mdoels/tensorflow_models/cifar10/cifar10.pb](ker
 To test the exported tensorflow graph model file, run the following command:
 
 ```bash
-cd demo
+cd keras_audio_classifer/demo
 python cifar10_tensorflow_classifier.py
 ```
 
