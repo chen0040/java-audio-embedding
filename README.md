@@ -5,7 +5,14 @@ Audio embedding in Java
 The current project attempts to develop a pure Java audio encoder that can be used in pure Java or Android program. 
 Such an audio encoder can be used for music genres classification or music search, or music recommend-er.
 
+The current project contains currently two deep learning networks adopted from:
 
+* resnet
+* cifar
+
+The training and validation of these two models are showned below:
+
+![compare-history](keras_audio_classifier/demo/models/training-history-comparison.png)
 
 # Usage
 
@@ -51,6 +58,10 @@ for (String path : paths) {
     System.out.println("Predicted: " + label);
 }
 ```  
+
+### Extract features from audio in Java
+
+
 
 
 
