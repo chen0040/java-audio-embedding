@@ -9,7 +9,7 @@ Such an audio encoder can be used for music genres classification or music searc
 
 # Usage
 
-### Audio classifier trained model in Keras
+### Train audio classifier in Keras
 
 The machine learning package in Java is tensorflow, it loads a pre-trained audio classifier model (.pb format).
 The audio classifier model was originally implemented and trained using Keras in Python. This trained
@@ -17,12 +17,39 @@ classifier model (in .h5 format) was then converted to .pb model file which can 
 
 The keras training of audio classifier model can be found in [README_Training.md](README_Training.md)
 
-### Audio Classifier 
+### Run audio classifier in Java
+ 
 The [sample codes](java_audio_classifier/src/main/java/com/github/chen0040/tensorflow/classifiers/demo/Cifar10ImageClassifierDemo.java) 
 below shows how to use the audio classifier to predict the genres of music:
 
 ```java
+import com.github.chen0040.tensorflow.classifiers.cifar10.Cifar10AudioClassifier;
+import com.github.chen0040.tensorflow.classifiers.utils.ResourceUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+InputStream inputStream = ResourceUtils.getInputStream("tf_models/cifar10.pb");
+Cifar10AudioClassifier classifier = new Cifar10AudioClassifier();
+classifier.load_model(inputStream);
+
+List<String> paths = getAudioFiles();
+
+Collections.shuffle(paths);
+
+for (String path : paths) {
+    System.out.println("Predicting " + path + " ...");
+    File f = new File(path);
+    String label = classifier.predict_audio(f);
+
+    System.out.println("Predicted: " + label);
+}
 ```  
 
 
