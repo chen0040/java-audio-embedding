@@ -35,7 +35,7 @@ cd demo
 python cifar10_train.py
 ```
 
-The [sample codes](demo/cifar10_train.py) below show how to train Cifar10AudioClassifier to classify songs
+The [sample codes](keras_audio_classifier/demo/cifar10_train.py) below show how to train Cifar10AudioClassifier to classify songs
 based on its genre labels:
 
 ```python
@@ -75,7 +75,7 @@ if __name__ == '__main__':
 
 ```
 
-After training, the trained models are saved to [demo/models](demo/models). 
+After training, the trained models are saved to [keras_audio_classifier/demo/models](keras_audio_classifier/demo/models). 
 
 * The training accuracy reached over 80% after 29 epochs.
 * The training accuracy reached over 90% after 38 epochs.
@@ -84,7 +84,7 @@ After training, the trained models are saved to [demo/models](demo/models).
 Below compares training quality of 
 [ResNetV2AudioClassifier](keras_audio/library/resnet_v2.py) and [Cifar10AudioClassifier](keras_audio/library/cifar10.py):
 
-![training-comppare](demo/models/training-history-comparison.png)
+![training-comppare](keras_audio_classifier/demo/models/training-history-comparison.png)
 
 To test the trained Cifar10AudioClassifier model, run the following command:
 
@@ -93,7 +93,7 @@ cd demo
 python cifar10_predict.py
 ```
 
-The [sample codes](demo/cifar10_predict.py) shows how to test the trained Cifar10AudioClassifier model:
+The [sample codes](keras_audio_classifier/demo/cifar10_predict.py) shows how to test the trained Cifar10AudioClassifier model:
 
 ```python
 from random import shuffle
@@ -150,8 +150,8 @@ cd demo
 python cifar10_tensorflow_export_model.py
 ```
 
-The script [demo/cifar10_tensorflow_export_model.py](demo/cifar10_tensorflow_export_model.py) export the trained model
-as [demo/mdoels/tensorflow_models/cifar10/cifar10.pb](demo/models/tensorflow_models/cifar10/cifar10.pb) 
+The script [keras_audio_classifier/demo/cifar10_tensorflow_export_model.py](keras_audio_classifier/demo/cifar10_tensorflow_export_model.py) export the trained model
+as [keras_audio_classifier/demo/mdoels/tensorflow_models/cifar10/cifar10.pb](keras_audio_classifier/demo/models/tensorflow_models/cifar10/cifar10.pb) 
 
 To test the exported tensorflow graph model file, run the following command:
 
@@ -160,8 +160,8 @@ cd demo
 python cifar10_tensorflow_classifier.py
 ```
 
-The script [demo/cifar10_tensorflow_classifier.py](demo/cifar10_tensorflow_classifier.py) uses pure tensorflow code
-to load the [cifar10.pb](demo/models/tensorflow_models/cifar10/cifar10.pb) and uses it to predict genres of the 
+The script [keras_audio_classifier/demo/cifar10_tensorflow_classifier.py](keras_audio_classifier/demo/cifar10_tensorflow_classifier.py) uses pure tensorflow code
+to load the [cifar10.pb](keras_audio_classifier/demo/models/tensorflow_models/cifar10/cifar10.pb) and uses it to predict genres of the 
 songs
 
 ### Music genres prediction using Tensorflow in Java
