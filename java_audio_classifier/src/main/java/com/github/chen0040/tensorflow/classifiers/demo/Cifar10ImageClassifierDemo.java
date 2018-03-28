@@ -12,18 +12,16 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Cifar10ImageClassifierDemo {
 
     private static final Logger logger = LoggerFactory.getLogger(Cifar10ImageClassifierDemo.class);
 
-    public static void main(String[] args) throws IOException {
-
-
-        InputStream inputStream = ResourceUtils.getInputStream("tf_models/cifar10.pb");
-        Cifar10ImageClassifier classifier = new Cifar10ImageClassifier();
-        classifier.load_model(inputStream);
-
+    private static List<String> getAudioFiles() {
+        List<String> result = new ArrayList<>();
         File file = new File("gtzan/genres");
         System.out.println(file.getAbsolutePath());
         if(file.isDirectory()) {
@@ -32,15 +30,34 @@ public class Cifar10ImageClassifierDemo {
                     for (File f : class_folder.listFiles()) {
                         String file_path = f.getAbsolutePath();
                         if (file_path.endsWith("au")) {
-                            System.out.println("Predicting " + file_path + " ...");
-                            String label = classifier.predict_audio(f);
-
-                            System.out.println("Predicted: " + label);
+                            result.add(file_path);
 
                         }
                     }
                 }
             }
+        }
+
+        return result;
+    }
+
+    public static void main(String[] args) throws IOException {
+
+
+        InputStream inputStream = ResourceUtils.getInputStream("tf_models/cifar10.pb");
+        Cifar10ImageClassifier classifier = new Cifar10ImageClassifier();
+        classifier.load_model(inputStream);
+
+        List<String> paths = getAudioFiles();
+
+        Collections.shuffle(paths);
+
+        for(String path : paths) {
+            System.out.println("Predicting " + path + " ...");
+            File f = new File(path);
+            String label = classifier.predict_audio(f);
+
+            System.out.println("Predicted: " + label);
         }
     }
 }
