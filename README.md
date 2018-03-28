@@ -26,7 +26,7 @@ The keras training of audio classifier model can be found in [README_Training.md
 
 ### Run audio classifier in Java
  
-The [sample codes](java_audio_classifier/src/main/java/com/github/chen0040/tensorflow/classifiers/demo/Cifar10ImageClassifierDemo.java) 
+The [sample codes](java_audio_classifier/src/main/java/com/github/chen0040/tensorflow/classifiers/demo/Cifar10AudioClassifierDemo.java) 
 below shows how to use the audio classifier to predict the genres of music:
 
 ```java
@@ -44,6 +44,40 @@ import java.util.List;
 
 InputStream inputStream = ResourceUtils.getInputStream("tf_models/cifar10.pb");
 Cifar10AudioClassifier classifier = new Cifar10AudioClassifier();
+classifier.load_model(inputStream);
+
+List<String> paths = getAudioFiles();
+
+Collections.shuffle(paths);
+
+for (String path : paths) {
+    System.out.println("Predicting " + path + " ...");
+    File f = new File(path);
+    String label = classifier.predict_audio(f);
+
+    System.out.println("Predicted: " + label);
+}
+```  
+
+ 
+The [sample codes](java_audio_classifier/src/main/java/com/github/chen0040/tensorflow/classifiers/demo/ResNetV2AudioClassifierDemo.java) 
+below shows how to use the audio classifier to predict the genres of music:
+
+```java
+import com.github.chen0040.tensorflow.classifiers.resnet_v2.ResNetV2AudioClassifier;
+import com.github.chen0040.tensorflow.classifiers.utils.ResourceUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+InputStream inputStream = ResourceUtils.getInputStream("tf_models/resnet-v2.pb");
+ResNetV2AudioClassifier classifier = new ResNetV2AudioClassifier();
 classifier.load_model(inputStream);
 
 List<String> paths = getAudioFiles();
