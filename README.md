@@ -30,7 +30,7 @@ The [sample codes](java_audio_classifier/src/main/java/com/github/chen0040/tenso
 below shows how to use the audio classifier to predict the genres of music:
 
 ```java
-import com.github.chen0040.tensorflow.classifiers.cifar10.Cifar10AudioClassifier;
+import com.github.chen0040.tensorflow.classifiers.models.cifar10.Cifar10AudioClassifier;
 import com.github.chen0040.tensorflow.classifiers.utils.ResourceUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

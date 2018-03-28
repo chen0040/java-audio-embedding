@@ -1,4 +1,4 @@
-package com.github.chen0040.tensorflow.classifiers.resnet;
+package com.github.chen0040.tensorflow.classifiers.models.resnet;
 
 import com.github.chen0040.tensorflow.audio.MelSpectrogram;
 import com.github.chen0040.tensorflow.audio.consts.MelSpectrogramDimension;

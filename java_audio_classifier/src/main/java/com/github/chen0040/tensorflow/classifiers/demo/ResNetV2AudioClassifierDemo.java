@@ -1,7 +1,7 @@
 package com.github.chen0040.tensorflow.classifiers.demo;
 
-import com.github.chen0040.tensorflow.classifiers.cifar10.Cifar10AudioClassifier;
-import com.github.chen0040.tensorflow.classifiers.resnet.ResNetV2AudioClassifier;
+import com.github.chen0040.tensorflow.classifiers.models.cifar10.Cifar10AudioClassifier;
+import com.github.chen0040.tensorflow.classifiers.models.resnet.ResNetV2AudioClassifier;
 import com.github.chen0040.tensorflow.classifiers.utils.ResourceUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

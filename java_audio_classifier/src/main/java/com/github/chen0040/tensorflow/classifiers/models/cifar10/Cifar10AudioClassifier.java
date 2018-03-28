@@ -1,4 +1,4 @@
-package com.github.chen0040.tensorflow.classifiers.cifar10;
+package com.github.chen0040.tensorflow.classifiers.models.cifar10;
 
 import com.github.chen0040.tensorflow.audio.MelSpectrogram;
 import com.github.chen0040.tensorflow.audio.consts.MelSpectrogramDimension;
