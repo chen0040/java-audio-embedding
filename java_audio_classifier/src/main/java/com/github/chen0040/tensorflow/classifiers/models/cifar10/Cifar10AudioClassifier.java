@@ -46,12 +46,11 @@ public class Cifar10AudioClassifier implements AutoCloseable {
                 MelSpectrogramDimension.Height);
     }
 
-    public String predict_image(BufferedImage image, int imgWidth, int imgHeight){
+    public float[] encode_image(BufferedImage image, int imgWidth, int imgHeight) {
 
         image = ImageUtils.resizeImage(image, imgWidth, imgHeight);
 
         Tensor<Float> imageTensor = TensorUtils.getImageTensor(image, imgWidth, imgHeight);
-
 
 
         try (Session sess = new Session(graph);
@@ -67,20 +66,35 @@ public class Cifar10AudioClassifier implements AutoCloseable {
                                 Arrays.toString(rshape)));
             }
             int nlabels = (int) rshape[1];
-            float[] predicted = result.copyTo(new float[1][nlabels])[0];
+            return result.copyTo(new float[1][nlabels])[0];
+        } catch (Exception ex) {
+            logger.error("Failed to predict image", ex);
+            ex.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public float[] encode_image(BufferedImage image) {
+        return encode_image(image, MelSpectrogramDimension.Width,
+                MelSpectrogramDimension.Height);
+    }
+
+    public String predict_image(BufferedImage image, int imgWidth, int imgHeight) {
+
+        float[] predicted = encode_image(image, imgWidth, imgHeight);
+        if(predicted != null) {
+            int nlabels = predicted.length;
             int argmax = 0;
             float max = predicted[0];
-            for(int i=1; i < nlabels; ++i) {
-                if(max < predicted[i]) {
+            for (int i = 1; i < nlabels; ++i) {
+                if (max < predicted[i]) {
                     max = predicted[i];
                     argmax = i;
                 }
             }
 
             return labels[argmax];
-        } catch(Exception ex) {
-            logger.error("Failed to predict image", ex);
-            ex.printStackTrace();
         }
 
         return "unknown";
@@ -94,17 +108,35 @@ public class Cifar10AudioClassifier implements AutoCloseable {
         }
     }
 
-    public String predict_audio(File f) {
+    public static BufferedImage convert_to_image(File f) {
         MelSpectrogram melGram = new MelSpectrogram();
         melGram.setOutputFrameWidth(MelSpectrogramDimension.Width);
         melGram.setOutputFrameHeight(MelSpectrogramDimension.Height);
 
 
         try {
-            BufferedImage image = melGram.convertAudio(f);
-            return predict_image(image);
+            return melGram.convertAudio(f);
         } catch (IOException | UnsupportedAudioFileException | LineUnavailableException e) {
             e.printStackTrace();
+        }
+        return null;
+    }
+
+    public float[] encode_audio(File f) {
+        BufferedImage image = convert_to_image(f);
+
+        if(image != null) {
+            return encode_image(image);
+        }
+
+        return null;
+    }
+
+    public String predict_audio(File f) {
+        BufferedImage image = convert_to_image(f);
+
+        if(image != null) {
+            return predict_image(image);
         }
 
         return "NA";
