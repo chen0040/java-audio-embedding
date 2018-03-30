@@ -199,6 +199,20 @@ public class MelSpectrogram  implements PitchDetectionHandler {
 
     }
 
+    public static BufferedImage convert_to_image(File f) {
+        MelSpectrogram melGram = new MelSpectrogram();
+        melGram.setOutputFrameWidth(MelSpectrogramDimension.Width);
+        melGram.setOutputFrameHeight(MelSpectrogramDimension.Height);
+
+
+        try {
+            return melGram.convertAudio(f);
+        } catch (IOException | UnsupportedAudioFileException | LineUnavailableException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static void main(String[] args) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
         File file = new File("gtzan/genres");
         System.out.println(file.getAbsolutePath());

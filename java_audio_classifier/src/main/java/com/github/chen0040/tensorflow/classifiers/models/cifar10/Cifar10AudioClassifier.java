@@ -2,6 +2,8 @@ package com.github.chen0040.tensorflow.classifiers.models.cifar10;
 
 import com.github.chen0040.tensorflow.audio.MelSpectrogram;
 import com.github.chen0040.tensorflow.audio.consts.MelSpectrogramDimension;
+import com.github.chen0040.tensorflow.classifiers.models.AudioClassifier;
+import com.github.chen0040.tensorflow.classifiers.models.TrainedModelLoader;
 import com.github.chen0040.tensorflow.classifiers.utils.ImageUtils;
 import com.github.chen0040.tensorflow.classifiers.utils.InputStreamUtils;
 import com.github.chen0040.tensorflow.classifiers.utils.TensorUtils;
@@ -11,41 +13,36 @@ import org.tensorflow.Graph;
 import org.tensorflow.Session;
 import org.tensorflow.Tensor;
 
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 
-public class Cifar10AudioClassifier implements AutoCloseable {
+public class Cifar10AudioClassifier implements TrainedModelLoader, AudioClassifier, AutoCloseable {
 
     private Graph graph = new Graph();
     public Cifar10AudioClassifier() {
 
     }
 
+    @Override
     public void load_model(InputStream inputStream) throws IOException {
         byte[] bytes = InputStreamUtils.getBytes(inputStream);
         graph.importGraphDef(bytes);
 
     }
 
-    private static final String[] labels = new String[]{
-
-        "blues", "classical", "country", "disco", "hiphop", "jazz", "metal",
-                "pop", "reggae", "rock"
-
-    };
 
     private static final Logger logger = LoggerFactory.getLogger(Cifar10AudioClassifier.class);
 
+    @Override
     public String predict_image(BufferedImage image) {
         return predict_image(image, MelSpectrogramDimension.Width,
                 MelSpectrogramDimension.Height);
     }
 
+    @Override
     public float[] encode_image(BufferedImage image, int imgWidth, int imgHeight) {
 
         image = ImageUtils.resizeImage(image, imgWidth, imgHeight);
@@ -75,30 +72,12 @@ public class Cifar10AudioClassifier implements AutoCloseable {
         return null;
     }
 
+    @Override
     public float[] encode_image(BufferedImage image) {
         return encode_image(image, MelSpectrogramDimension.Width,
                 MelSpectrogramDimension.Height);
     }
 
-    public String predict_image(BufferedImage image, int imgWidth, int imgHeight) {
-
-        float[] predicted = encode_image(image, imgWidth, imgHeight);
-        if(predicted != null) {
-            int nlabels = predicted.length;
-            int argmax = 0;
-            float max = predicted[0];
-            for (int i = 1; i < nlabels; ++i) {
-                if (max < predicted[i]) {
-                    max = predicted[i];
-                    argmax = i;
-                }
-            }
-
-            return labels[argmax];
-        }
-
-        return "unknown";
-    }
 
     @Override
     public void close() throws Exception {
@@ -108,22 +87,9 @@ public class Cifar10AudioClassifier implements AutoCloseable {
         }
     }
 
-    public static BufferedImage convert_to_image(File f) {
-        MelSpectrogram melGram = new MelSpectrogram();
-        melGram.setOutputFrameWidth(MelSpectrogramDimension.Width);
-        melGram.setOutputFrameHeight(MelSpectrogramDimension.Height);
-
-
-        try {
-            return melGram.convertAudio(f);
-        } catch (IOException | UnsupportedAudioFileException | LineUnavailableException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
+    @Override
     public float[] encode_audio(File f) {
-        BufferedImage image = convert_to_image(f);
+        BufferedImage image = MelSpectrogram.convert_to_image(f);
 
         if(image != null) {
             return encode_image(image);
@@ -132,8 +98,9 @@ public class Cifar10AudioClassifier implements AutoCloseable {
         return null;
     }
 
+    @Override
     public String predict_audio(File f) {
-        BufferedImage image = convert_to_image(f);
+        BufferedImage image = MelSpectrogram.convert_to_image(f);
 
         if(image != null) {
             return predict_image(image);

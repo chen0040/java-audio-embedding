@@ -11,6 +11,7 @@
     <modules>
         <module>java_audio_classifier</module>
         <module>java_audio_melgram</module>
+        <module>java_audio_search</module>
     </modules>
 
 
