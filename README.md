@@ -162,6 +162,31 @@ for (String path : paths) {
 }
 ```  
 
+### Audio Search Engine
+
+The [sample codes](java_audio_search/src/main/java/com/github/chen0040/tensorflow/search/AudioSearchEngineDemo.java) 
+below shows how to index and search for audio file using the [AudioSearchEngine](java_audio_search/src/main/java/com/github/chen0040/tensorflow/search/models/AudioSearchEngine.java) class:
+
+```java
+AudioSearchEngine searchEngine = new AudioSearchEngine();
+if(!searchEngine.loadIndexDbIfExists()) {
+    searchEngine.indexAll(new File("music_samples").listFiles());
+    searchEngine.saveIndexDb();
+}
+
+int pageIndex = 0;
+int pageSize = 20;
+boolean skipPerfectMatch = true;
+for(File f : new File("music_samples").listFiles()) {
+    System.out.println("querying similar music to " + f.getName());
+    List<AudioSearchEntry> result = searchEngine.query(f, pageIndex, pageSize, skipPerfectMatch);
+    for(int i=0; i < result.size(); ++i){
+        System.out.println("# " + i + ": " + result.get(i).getPath() + " (distSq: " + result.get(i).getDistanceSq() + ")");
+    }
+}
+```  
+
+
 
 
 
