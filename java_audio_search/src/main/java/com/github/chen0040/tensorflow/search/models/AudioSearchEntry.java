@@ -23,6 +23,10 @@ public class AudioSearchEntry {
         return distanceSq;
     }
 
+    public AudioSearchEntry() {
+
+    }
+
     public AudioSearchEntry(String path, float[] result) {
         this.indexedTime = new Date().getTime();
         this.features = result;
