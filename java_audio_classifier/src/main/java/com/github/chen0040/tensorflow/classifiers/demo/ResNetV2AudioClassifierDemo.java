@@ -2,6 +2,7 @@ package com.github.chen0040.tensorflow.classifiers.demo;
 
 import com.github.chen0040.tensorflow.classifiers.models.cifar10.Cifar10AudioClassifier;
 import com.github.chen0040.tensorflow.classifiers.models.resnet.ResNetV2AudioClassifier;
+import com.github.chen0040.tensorflow.classifiers.utils.FileUtils;
 import com.github.chen0040.tensorflow.classifiers.utils.ResourceUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,30 +18,14 @@ public class ResNetV2AudioClassifierDemo {
 
     private static final Logger logger = LoggerFactory.getLogger(ResNetV2AudioClassifierDemo.class);
 
-    private static List<String> getAudioFiles() {
-        List<String> result = new ArrayList<>();
-        File dir = new File("music_samples");
-        System.out.println(dir.getAbsolutePath());
-        if (dir.isDirectory()) {
 
-            for (File f : dir.listFiles()) {
-                String file_path = f.getAbsolutePath();
-                if (file_path.endsWith("au")) {
-                    result.add(file_path);
-
-                }
-            }
-        }
-
-        return result;
-    }
 
     public static void main(String[] args) throws IOException {
         InputStream inputStream = ResourceUtils.getInputStream("tf_models/resnet-v2.pb");
         ResNetV2AudioClassifier classifier = new ResNetV2AudioClassifier();
         classifier.load_model(inputStream);
 
-        List<String> paths = getAudioFiles();
+        List<String> paths = FileUtils.getAudioFiles();
 
         Collections.shuffle(paths);
 

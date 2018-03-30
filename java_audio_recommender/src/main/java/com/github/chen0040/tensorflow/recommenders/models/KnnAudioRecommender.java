@@ -6,7 +6,7 @@ import com.github.chen0040.tensorflow.search.models.AudioSearchEntry;
 import java.io.File;
 import java.util.*;
 
-public class KNNAudioRecommender extends AudioSearchEngine implements AudioRecommender {
+public class KnnAudioRecommender extends AudioSearchEngine implements AudioRecommender {
     public List<AudioSearchEntry> recommends(List<AudioMemo> userHistory, int k) {
         userHistory.sort((a, b) -> Long.compare(b.getEventTime(), a.getEventTime()));
         List<String> mostRecentHistory = new ArrayList<>();
@@ -35,7 +35,7 @@ public class KNNAudioRecommender extends AudioSearchEngine implements AudioRecom
             double distance2 = (double)mostRecentHistory.size() / (i+1.0);
 
             File file = new File(filePath);
-            List<AudioSearchEntry> similar_songs = query(file, 0, 10, false);
+            List<AudioSearchEntry> similar_songs = query(file, 0, 10, true);
 
             for(AudioSearchEntry entry : similar_songs){
                 double distance1 = Math.sqrt(entry.getDistanceSq());
