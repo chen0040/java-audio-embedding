@@ -38,7 +38,7 @@ public class KnnAudioRecommender extends AudioSearchEngine implements AudioRecom
             List<AudioSearchEntry> similar_songs = query(file, 0, 10, true);
 
             for(AudioSearchEntry entry : similar_songs){
-                double distance1 = Math.sqrt(entry.getDistanceSq());
+                double distance1 = Math.sqrt(entry.getDistance());
 
                 double distance_mean = (distance1 * distance2) / (distance1 + distance2);
 

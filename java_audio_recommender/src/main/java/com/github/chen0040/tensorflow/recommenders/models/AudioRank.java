@@ -14,6 +14,6 @@ public class AudioRank {
     private float[] features;
 
     public AudioSearchEntry toSearchEntry() {
-        return new AudioSearchEntry(audioPath, features);
+        return new AudioSearchEntry(audioPath, features).withDistance(meanDistance);
     }
 }
