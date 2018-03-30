@@ -48,4 +48,16 @@ public class AudioSearchEntry {
         return result;
     }
 
+    @Override
+    public int hashCode() {
+        return path.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object rhs){
+        AudioSearchEntry rhsObj = (AudioSearchEntry)rhs;
+        if(rhsObj==null) return false;
+        return rhsObj.getPath().equals(path);
+    }
+
 }
