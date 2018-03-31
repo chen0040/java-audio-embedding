@@ -170,14 +170,14 @@ below shows how to index and search for audio file using the [AudioSearchEngine]
 ```java
 AudioSearchEngine searchEngine = new AudioSearchEngine();
 if(!searchEngine.loadIndexDbIfExists()) {
-    searchEngine.indexAll(new File("music_samples").listFiles());
+    searchEngine.indexAll(FileUtils.getAudioFiles());
     searchEngine.saveIndexDb();
 }
 
 int pageIndex = 0;
 int pageSize = 20;
 boolean skipPerfectMatch = true;
-for(File f : new File("music_samples").listFiles()) {
+for(File f : FileUtils.getAudioFiles()) {
     System.out.println("querying similar music to " + f.getName());
     List<AudioSearchEntry> result = searchEngine.query(f, pageIndex, pageSize, skipPerfectMatch);
     for(int i=0; i < result.size(); ++i){
@@ -194,7 +194,7 @@ below shows how to recommend musics based on user's music history using the [Knn
 ```java
 AudioUserHistory userHistory = new AudioUserHistory();
 
-List<String> audioFiles = FileUtils.getAudioFiles();
+List<String> audioFiles = FileUtils.getAudioFilePaths();
 Collections.shuffle(audioFiles);
 
 for(int i=0; i < 40; ++i){
