@@ -199,7 +199,19 @@ public class MelSpectrogram  implements PitchDetectionHandler {
 
     }
 
+    public static BufferedImage convert_mp3_to_image(File mp3){
+        File tempFile = AudioUtils.convertMp3ToWave(mp3);
+        BufferedImage img = convert_to_image(tempFile);
+        tempFile.delete();
+        return img;
+    }
+
     public static BufferedImage convert_to_image(File f) {
+
+        if(f.getPath().toLowerCase().endsWith(".mp3")){
+            return convert_mp3_to_image(f);
+        }
+
         MelSpectrogram melGram = new MelSpectrogram();
         melGram.setOutputFrameWidth(MelSpectrogramDimension.Width);
         melGram.setOutputFrameHeight(MelSpectrogramDimension.Height);

@@ -17,12 +17,11 @@ public class AudioSearchEngineDemo {
         int pageIndex = 0;
         int pageSize = 20;
         boolean skipPerfectMatch = true;
-        for(File f : new File("music_samples").listFiles()) {
-            System.out.println("querying similar music to " + f.getName());
-            List<AudioSearchEntry> result = searchEngine.query(f, pageIndex, pageSize, skipPerfectMatch);
-            for(int i=0; i < result.size(); ++i){
-                System.out.println("# " + i + ": " + result.get(i).getPath() + " (distSq: " + result.get(i).getDistance() + ")");
-            }
+        File f = new File("mp3_samples/example.mp3");
+        System.out.println("querying similar music to " + f.getName());
+        List<AudioSearchEntry> result = searchEngine.query(f, pageIndex, pageSize, skipPerfectMatch);
+        for(int i=0; i < result.size(); ++i){
+            System.out.println("# " + i + ": " + result.get(i).getPath() + " (distSq: " + result.get(i).getDistance() + ")");
         }
     }
 }
